@@ -2,21 +2,66 @@ version: "3.8"
 
 services:
 
+  edge_a:
+    privileged: true
+    build:
+      context: .
+      dockerfile: ./wan/edge_a.dockerfile
+    ports:
+      - "60001:22"
+    tty: true
+    networks:
+      default:
+        ipv4_address: 172.24.0.101
+      remote_site:
+        ipv4_address: 172.25.0.101
+    hostname: EDGE_A
+
+  edge_b:
+    privileged: true
+    build:
+      context: .
+      dockerfile: ./wan/edge_b.dockerfile
+    ports:
+      - "60002:22"
+    tty: true
+    networks:
+      default:
+        ipv4_address: 172.24.0.102
+    hostname: EDGE_B
+
+  edge_c:
+    privileged: true
+    build:
+      context: .
+      dockerfile: ./wan/edge_c.dockerfile
+    ports:
+      - "60003:22"
+    tty: true
+    networks:
+      default:
+        ipv4_address: 172.24.0.103
+    hostname: EDGE_C
+
   routeros:
     privileged: true
     build:
       context: .
-      dockerfile: routeros.dockerfile
+      dockerfile: ./routeros/routeros.dockerfile
     ports:
-      - "60622:22"
+      - "60004:22"
     tty: true
     networks:
-      default:
-        ipv4_address: 172.25.0.101
+      remote_site:
+        ipv4_address: 172.25.0.110
     hostname: routeros
 
 networks:
   default:
+    ipam:
+      config:
+        - subnet: 172.24.0.0/24
+  remote_site:
     ipam:
       config:
         - subnet: 172.25.0.0/24

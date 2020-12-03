@@ -11,8 +11,8 @@ ifconfig br0 up
 
 cp /etc/udhcpd.conf /etc/udhcpd.conf_default
 
-echo -e "start           172.25.0.101\n\
-end             172.25.0.101\n\
+echo -e "start           172.25.0.110\n\
+end             172.25.0.110\n\
 interface       br0\n\
 opt     dns     8.8.8.8 8.8.4.4\n\
 option  subnet  255.255.255.0\n\
