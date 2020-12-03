@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+
+  routeros:
+    privileged: true
+    build:
+      context: .
+      dockerfile: routeros.dockerfile
+    ports:
+      - "60622:22"
+    tty: true
+    networks:
+      default:
+        ipv4_address: 172.25.0.101
+    hostname: routeros
+
+networks:
+  default:
+    ipam:
+      config:
+        - subnet: 172.25.0.0/24
