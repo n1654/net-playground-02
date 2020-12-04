@@ -5,8 +5,8 @@ services:
   edge_a:
     privileged: true
     build:
-      context: .
-      dockerfile: ./wan/edge_a.dockerfile
+      context: ./wan
+      dockerfile: edge_a.dockerfile
     ports:
       - "60001:22"
     tty: true
@@ -14,47 +14,90 @@ services:
       default:
         ipv4_address: 172.24.0.101
       remote_site:
-        ipv4_address: 172.25.0.101
+        ipv4_address: 10.0.1.101
     hostname: EDGE_A
 
   edge_b:
     privileged: true
     build:
-      context: .
-      dockerfile: ./wan/edge_b.dockerfile
+      context: ./wan
+      dockerfile: edge_b.dockerfile
     ports:
       - "60002:22"
     tty: true
     networks:
       default:
         ipv4_address: 172.24.0.102
+      local_site_b:
+        ipv4_address: 10.0.2.101
     hostname: EDGE_B
 
   edge_c:
     privileged: true
     build:
-      context: .
-      dockerfile: ./wan/edge_c.dockerfile
+      context: ./wan
+      dockerfile: edge_c.dockerfile
     ports:
       - "60003:22"
     tty: true
     networks:
       default:
         ipv4_address: 172.24.0.103
+      local_site_c:
+        ipv4_address: 10.0.3.101
     hostname: EDGE_C
 
   routeros:
     privileged: true
     build:
-      context: .
-      dockerfile: ./routeros/routeros.dockerfile
+      context: ./routeros
+      dockerfile: routeros.dockerfile
     ports:
       - "60004:22"
     tty: true
     networks:
       remote_site:
-        ipv4_address: 172.25.0.110
+        ipv4_address: 10.0.1.110
     hostname: routeros
+
+  router_a:
+    privileged: true
+    build:
+      context: ./lan
+      dockerfile: router_a.dockerfile
+    ports:
+      - "60005:22"
+    tty: true
+    networks:
+      remote_site:
+        ipv4_address: 10.0.1.102
+    hostname: router_a
+
+  router_b:
+    privileged: true
+    build:
+      context: ./lan
+      dockerfile: router_b.dockerfile
+    ports:
+      - "60006:22"
+    tty: true
+    networks:
+      remote_site:
+        ipv4_address: 10.0.1.102
+    hostname: router_b
+
+  router_c:
+    privileged: true
+    build:
+      context: ./lan
+      dockerfile: router_c.dockerfile
+    ports:
+      - "60007:22"
+    tty: true
+    networks:
+      remote_site:
+        ipv4_address: 10.0.1.103
+    hostname: router_c
 
 networks:
   default:
@@ -64,4 +107,12 @@ networks:
   remote_site:
     ipam:
       config:
-        - subnet: 172.25.0.0/24
+        - subnet: 10.0.1.0/24
+  local_site_b:
+    ipam:
+      config:
+        - subnet: 10.0.2.0/24
+  local_site_c:
+    ipam:
+      config:
+        - subnet: 10.0.3.0/24
