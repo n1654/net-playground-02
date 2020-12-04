@@ -1,5 +1,9 @@
 FROM alpine:latest
 
+COPY ./entrypoint.sh /
+COPY ./c.ipsec.conf /etc/ipsec.conf
+COPY ./ipsec.secrets /etc/ipsec.secrets
+
 RUN apk add openssh bash strongswan --no-cache
 RUN echo -e "Port 22\n\
 AddressFamily any\n\
@@ -12,4 +16,5 @@ RUN echo root:root123 | chpasswd
 RUN /usr/bin/ssh-keygen -A
 RUN ssh-keygen -t rsa -b 4096 -f  /etc/ssh/ssh_host_key
 
-CMD ["/usr/sbin/sshd","-D"]
+RUN ["chmod", "+x", "/entrypoint.sh"]
+ENTRYPOINT ["/entrypoint.sh"]

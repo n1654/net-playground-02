@@ -28,10 +28,9 @@ enable password zebra\n\
 log file /var/log/quagga/zebra.log\n\
 !\n\
 interface lo\n\
- ip address 192.168.99.1/32\n\
+ ip address 192.168.99.2/32\n\
 !\n\
-ip route 10.1.2.0/24 10.1.1.101\n\
-ip route 10.1.3.0/24 10.1.1.101\n\
+ip route 10.1.1.0/24 10.1.2.101\n\
 !" > /etc/quagga/zebra.conf
 RUN chown quagga:quagga /etc/quagga/zebra.conf
 RUN chmod 640 /etc/quagga/zebra.conf
@@ -63,15 +62,10 @@ RUN chmod 640 /etc/quagga/bgpd.conf
 # START SCRIPT
 RUN echo -e "#!bin/sh\n\
 \n\
-ip tunnel add gre-01 mode gre remote 10.1.2.102 local 10.1.1.102 ttl 255\n\
+ip tunnel add gre-01 mode gre remote 10.1.1.102 local 10.1.2.102 ttl 255\n\
 ip link set gre-01 up\n\
-ip addr add 192.168.254.1 dev gre-01\n\
-ip r a 192.168.99.2/32 dev gre-01\n\
-\n\
-ip tunnel add gre-02 mode gre remote 10.1.3.102 local 10.1.1.102 ttl 255\n\
-ip link set gre-02 up\n\
-ip addr add 192.168.254.2 dev gre-02\n\
-ip r a 192.168.99.3/32 dev gre-02\n\
+ip addr add 192.168.254.3 dev gre-01\n\
+ip r a 192.168.99.1/32 dev gre-01\n\
 \n\
 zebra -d -f /etc/quagga/zebra.conf\n\
 ospfd -d\n\

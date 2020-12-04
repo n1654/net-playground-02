@@ -11,12 +11,12 @@ ifconfig br0 up
 
 cp /etc/udhcpd.conf /etc/udhcpd.conf_default
 
-echo -e "start           172.25.0.110\n\
-end             172.25.0.110\n\
+echo -e "start           10.1.1.110\n\
+end             10.1.1.110\n\
 interface       br0\n\
 opt     dns     8.8.8.8 8.8.4.4\n\
 option  subnet  255.255.255.0\n\
-opt     router  172.25.0.1\n\
+opt     router  10.1.1.1\n\
 option  lease   864000" > /etc/udhcpd.conf
 
 udhcpd -I 1.2.3.4 -f &
